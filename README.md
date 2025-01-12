@@ -53,6 +53,7 @@ app.add_plugins(IosSafeAreaPlugin);
 fn bevy_system(safe_area: Res<IosSafeAreaResource>) {
     let safe_area_top = safe_area.top();
 }
+```
 
 ## Our Other Crates
 
