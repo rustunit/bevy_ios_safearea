@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## [0.1.0] - 2024-01-12
+## [0.1.1] - 2025-01-12
+
+### Changed
+* dont spam the log (use `tracing::debug`)
+
+## [0.1.0] - 2025-01-12
 
 Initial release
