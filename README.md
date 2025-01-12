@@ -38,7 +38,7 @@ Bevy plugin to query ios device safe area insets
 
 ## Bevy version support
 
-|bevy|bevy\_ios\_notifications|
+|bevy|crate|
 |----|---|
 |0.15|0.1,main|
 
