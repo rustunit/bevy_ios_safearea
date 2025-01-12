@@ -8,6 +8,14 @@
 [sh_discord]: https://img.shields.io/discord/1176858176897953872?label=discord&color=5561E6
 [lk_discord]: https://discord.gg/rQNeEnMhus
 
+Bevy plugin to query ios device safe area insets
+
+## Features
+
+* reads safe area on app start
+* easy access via a resource
+* noop on non-ios platforms (no `cfg`s needed in your app code)
+
 ## Instructions
 
 1. Add to XCode: Add SPM (Swift Package Manager) dependency
