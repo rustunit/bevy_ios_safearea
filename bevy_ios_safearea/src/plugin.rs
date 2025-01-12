@@ -41,6 +41,7 @@ fn init(
     window_query: Query<Entity, With<PrimaryWindow>>,
     mut res: ResMut<IosSafeAreaResource>,
 ) {
+    use bevy::utils::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
     tracing::debug!("safe area updating");
