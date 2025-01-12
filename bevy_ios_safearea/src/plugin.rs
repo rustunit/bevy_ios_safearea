@@ -43,7 +43,7 @@ fn init(
 ) {
     use winit::raw_window_handle::HasWindowHandle;
 
-    info!("safe area updating");
+    tracing::debug!("safe area updating");
 
     let entity = window_query.single();
     let raw_window = windows.get_window(entity).expect("invalid window handle");
@@ -56,7 +56,7 @@ fn init(
 
             let safe_area = IosSafeArea { top, bottom };
 
-            info!("safe area updated: {:?}", safe_area);
+            tracing::debug!("safe area updated: {:?}", safe_area);
 
             res.safe_area = Some(safe_area);
         }
