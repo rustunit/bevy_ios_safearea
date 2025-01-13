@@ -8,7 +8,9 @@
 [sh_discord]: https://img.shields.io/discord/1176858176897953872?label=discord&color=5561E6
 [lk_discord]: https://discord.gg/rQNeEnMhus
 
-Bevy plugin to query ios device safe area insets
+Bevy plugin to query ios device safe area insets.
+
+![demo](./assets/example.jpg)
 
 ## Features
 
