@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 
-
 /// Struct providing iOS device safe area insets.
 #[derive(Resource, Clone, Debug, Default, Reflect)]
 #[reflect(Resource)]
@@ -23,6 +22,40 @@ pub struct IosSafeArea {
     pub right: f32,
 }
 
+#[allow(dead_code)]
+/// A trait providing helper methods to access the safe area insets.
+pub trait SafeAreaHelper {
+    /// Returns the inset from the top of the screen.
+    fn top(&self) -> f32;
+
+    /// Returns the inset from the bottom of the screen.
+    fn bottom(&self) -> f32;
+
+    /// Returns the inset from the left side of the screen.
+    fn left(&self) -> f32;
+
+    /// Returns the inset from the right side of the screen.
+    fn right(&self) -> f32;
+}
+
+impl SafeAreaHelper for Option<Res<'_, IosSafeArea>> {
+    fn top(&self) -> f32 {
+        self.as_ref().map_or(0., |a|a.top)
+    }
+
+    fn bottom(&self) -> f32 {
+        self.as_ref().map_or(0., |a|a.bottom)
+    }
+
+    fn left(&self) -> f32 {
+        self.as_ref().map_or(0., |a|a.left)
+    }
+
+    fn right(&self) -> f32 {
+        self.as_ref().map_or(0., |a|a.right)
+    }
+}
+
 /// Plugin to query iOS device safe area insets.
 ///
 /// # Example
@@ -30,14 +63,14 @@ pub struct IosSafeArea {
 /// use bevy::prelude::*;
 ///
 /// App::new()
-///     .add_plugins((DefaultPlugins,bevy_ios_safearea::SafeAreaPlugin))
+///     .add_plugins((DefaultPlugins,bevy_ios_safearea::IosSafeAreaPlugin))
 ///     .run();
 /// ```
 #[allow(dead_code)]
 #[derive(Default)]
-pub struct SafeAreaPlugin;
+pub struct IosSafeAreaPlugin;
 
-impl Plugin for SafeAreaPlugin {
+impl Plugin for IosSafeAreaPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<IosSafeArea>();
         #[cfg(target_os = "ios")]
@@ -67,7 +100,12 @@ fn init(
             let left = unsafe { crate::native::swift_safearea_left(ui_view) };
             let right = unsafe { crate::native::swift_safearea_right(ui_view) };
 
-            let safe_area = IosSafeArea { top, bottom, left, right, };
+            let safe_area = IosSafeArea {
+                top,
+                bottom,
+                left,
+                right,
+            };
 
             commands.insert_resource(safe_area);
             tracing::debug!("safe area updated: {:?}", safe_area);
