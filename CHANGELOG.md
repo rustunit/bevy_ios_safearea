@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.1.3] - 2025-01-14
+
+### Fixed
+* fix docs.rs [#4](https://github.com/rustunit/bevy_ios_safearea/pull/4)
+
 ## [0.1.2] - 2025-01-12
 
 ### Fixed
