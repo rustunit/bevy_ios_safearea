@@ -2,7 +2,6 @@
 name = "bevy_ios_safearea"
 version = "0.1.2"
 edition = "2021"
-readme = "../README.md"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
 documentation = "https://docs.rs/bevy_ios_safearea"
