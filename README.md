@@ -31,7 +31,7 @@ Bevy plugin to query ios device safe area insets.
 
 ### 2. Add Rust dependency
 
-```
+```sh
 cargo add bevy_ios_safearea
 ``` 
 
@@ -46,14 +46,23 @@ bevy_ios_safearea = { version = "=0.1.0" }
 
 Initialize Bevy Plugin:
 
-```rust
+```rust,norun
 // request initialisation right on startup
-app.add_plugins(IosSafeAreaPlugin);
+use bevy::prelude::*;
+App::new()
+    .add_plugins((DefaultPlugins,bevy_ios_safearea::SafeAreaPlugin));
 ```
 
+Accessing it:
+
 ```rust
-fn bevy_system(safe_area: Res<IosSafeAreaResource>) {
-    let safe_area_top = safe_area.top();
+use bevy::prelude::*;
+fn bevy_system(safe_area: Option<Res<bevy_ios_safearea::IosSafeArea>>) {
+    let Some(area) = safe_area else {
+        return;
+    };
+    
+    let safe_area_top = area.top;
 }
 ```
 
@@ -86,4 +95,5 @@ All code in this repository is dual-licensed under either:
 at your option. This means you can select the license you prefer.
 
 ## Your contributions
+
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.

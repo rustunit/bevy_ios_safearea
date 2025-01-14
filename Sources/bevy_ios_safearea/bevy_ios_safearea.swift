@@ -12,3 +12,15 @@ public func safeareaBottom(view: UnsafeRawPointer) -> Float32 {
     return Float32(view.safeAreaInsets.bottom);
 }
 
+@_cdecl("swift_safearea_left")
+public func safeareaLeft(view: UnsafeRawPointer) -> Float32 {
+    let view = Unmanaged<UIView>.fromOpaque(view).takeUnretainedValue()
+    return Float32(view.safeAreaInsets.left);
+}
+
+@_cdecl("swift_safearea_right")
+public func safeareaRight(view: UnsafeRawPointer) -> Float32 {
+    let view = Unmanaged<UIView>.fromOpaque(view).takeUnretainedValue()
+    return Float32(view.safeAreaInsets.right);
+}
+
