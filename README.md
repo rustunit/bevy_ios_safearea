@@ -81,7 +81,7 @@ fn bevy_system(safe_area: Option<Res<IosSafeArea>>) {
 
 |bevy|crate|
 |----|---|
-|0.15|0.1,main|
+|0.15|0.2,0.1,main|
 
 # License
 
