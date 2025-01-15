@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.0] - 2025-01-15
+
+### Added
+
+* `left` and `right` fields support in `IosSafeArea`
+* `SafeAreaHelper` trait for simple access to the `Option<Res<IosSafeArea>>`
+
+### Removed
+
+* `IosSafeAreaResource` is removed
+
+### Changed
+
+* `IosSafeArea` became a Resource
+
+### Fixed
+
+* docs.rs fix
+
+
 ## [0.1.3] - 2025-01-14
 
 ### Fixed
