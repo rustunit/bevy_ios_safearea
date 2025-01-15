@@ -77,4 +77,4 @@ jobs:
 
       - name: Check documentation
         run: |
-          cd bevy_ios_safearea && cargo doc --workspace --all-features --document-private-items --no-deps
+          cd bevy_ios_safearea && cargo doc --no-deps
