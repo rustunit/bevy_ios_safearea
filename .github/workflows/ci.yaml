@@ -46,6 +46,8 @@ jobs:
 
       - name: Populate target directory from cache
         uses: Leafwing-Studios/cargo-cache@v2
+        with:
+          manifest-path: bevy_ios_safearea/Cargo.toml
 
       - name: Run Clippy lints
         working-directory: bevy_ios_safearea
@@ -65,6 +67,8 @@ jobs:
 
       - name: Populate target directory from cache
         uses: Leafwing-Studios/cargo-cache@v2
+        with:
+          manifest-path: bevy_ios_safearea/Cargo.toml
 
       - name: Check documentation
         working-directory: bevy_ios_safearea

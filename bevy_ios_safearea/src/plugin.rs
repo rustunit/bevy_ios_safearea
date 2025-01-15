@@ -3,7 +3,7 @@ use bevy::prelude::*;
 /// Struct providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
 /// It is recommended to access it from systems by using [`Option<Res<IosSafeArea>>`].
-/// 
+///
 /// Using [IosSafeAreaHelper] can simplify accessing it.
 /// # Example
 /// ```rust
@@ -52,19 +52,19 @@ pub trait IosSafeAreaHelper {
 
 impl IosSafeAreaHelper for Option<Res<'_, IosSafeArea>> {
     fn top(&self) -> f32 {
-        self.as_ref().map_or(0., |a|a.top)
+        self.as_ref().map_or(0., |a| a.top)
     }
 
     fn bottom(&self) -> f32 {
-        self.as_ref().map_or(0., |a|a.bottom)
+        self.as_ref().map_or(0., |a| a.bottom)
     }
 
     fn left(&self) -> f32 {
-        self.as_ref().map_or(0., |a|a.left)
+        self.as_ref().map_or(0., |a| a.left)
     }
 
     fn right(&self) -> f32 {
-        self.as_ref().map_or(0., |a|a.right)
+        self.as_ref().map_or(0., |a| a.right)
     }
 }
 
