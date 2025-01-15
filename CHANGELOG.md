@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* `left` field in `IosSafeArea`
+* `right` field in `IosSafeArea`
+
 ## [0.1.6] - 2025-01-15
 
 ### Fixed
