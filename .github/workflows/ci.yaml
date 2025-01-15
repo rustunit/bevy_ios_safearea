@@ -27,7 +27,7 @@ jobs:
           components: rustfmt
 
       - name: Check formatting
-        run: cargo fmt --all -- --check
+        run: cd bevy_ios_safearea && cargo fmt --all -- --check
 
   # Run Clippy lints.
   clippy:
@@ -51,7 +51,7 @@ jobs:
 
       - name: Run Clippy lints
         run: |
-          cargo clippy --workspace --all-features --all-targets -- --deny warnings
+          cd bevy_ios_safearea && cargo clippy --workspace --all-features --all-targets -- --deny warnings
 
   # Check documentation.
   doc:
@@ -73,4 +73,4 @@ jobs:
 
       - name: Check documentation
         run: |
-          cargo doc --workspace --all-features --document-private-items --no-deps
+          cd bevy_ios_safearea && cargo doc --workspace --all-features --document-private-items --no-deps
