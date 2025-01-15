@@ -3,18 +3,17 @@ use bevy::prelude::*;
 /// Struct providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
 /// It is recommended to access it from systems by using [Option<Res<IosSafeArea>>].
-/// Using [SafeAreaHelper] can simplify accessing it.
+/// Using [IosSafeAreaHelper] can simplify accessing it.
 /// # Example
 /// ```rust
 /// use bevy::prelude::*;
-/// use bevy_ios_safearea::{IosSafeArea, SafeAreaHelper};
+/// use bevy_ios_safearea::{IosSafeArea, IosSafeAreaHelper};
 ///
 /// fn bevy_system(safe_area: Option<Res<IosSafeArea>>) {    
 ///     let safe_area_top = safe_area.top();
 /// }
 // ```
-#[derive(Resource, Clone, Debug, Default, Reflect)]
-#[reflect(Resource)]
+#[derive(Resource, Clone, Debug, Default)]
 pub struct IosSafeArea {
     /// The inset from the top of the screen.
     ///
@@ -36,7 +35,7 @@ pub struct IosSafeArea {
 
 #[allow(dead_code)]
 /// A trait providing helper methods to access the safe area insets.
-pub trait SafeAreaHelper {
+pub trait IosSafeAreaHelper {
     /// Returns the inset from the top of the screen.
     fn top(&self) -> f32;
 
@@ -50,7 +49,7 @@ pub trait SafeAreaHelper {
     fn right(&self) -> f32;
 }
 
-impl SafeAreaHelper for Option<Res<'_, IosSafeArea>> {
+impl IosSafeAreaHelper for Option<Res<'_, IosSafeArea>> {
     fn top(&self) -> f32 {
         self.as_ref().map_or(0., |a|a.top)
     }
@@ -82,9 +81,9 @@ impl SafeAreaHelper for Option<Res<'_, IosSafeArea>> {
 #[derive(Default)]
 pub struct IosSafeAreaPlugin;
 
+#[allow(unused_variables)]
 impl Plugin for IosSafeAreaPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<IosSafeArea>();
         #[cfg(target_os = "ios")]
         app.add_systems(Startup, init);
     }
