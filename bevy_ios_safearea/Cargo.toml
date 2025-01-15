@@ -11,6 +11,10 @@ description = "Bevy plugin to query device safe area insets"
 
 [package.metadata.docs.rs]
 targets = "x86_64-apple-darwin"
+features = ["docs"]
+
+[features]
+docs = ["winit/x11"]
 
 [dependencies]
 bevy = { version = "0.15", default-features = false, features = [
