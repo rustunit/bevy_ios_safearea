@@ -2,7 +2,8 @@ use bevy::prelude::*;
 
 /// Struct providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
-/// It is recommended to access it from systems by using [Option<Res<IosSafeArea>>].
+/// It is recommended to access it from systems by using [`Option<Res<IosSafeArea>>`].
+/// 
 /// Using [IosSafeAreaHelper] can simplify accessing it.
 /// # Example
 /// ```rust
