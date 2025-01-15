@@ -27,12 +27,13 @@ jobs:
           components: rustfmt
 
       - name: Check formatting
-        run: cd bevy_ios_safearea && cargo fmt --all -- --check
+        working-directory: bevy_ios_safearea
+        run: cargo fmt --all -- --check
 
   # Run Clippy lints.
   clippy:
     name: Clippy
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 30
     steps:
       - name: Checkout repository
@@ -43,20 +44,19 @@ jobs:
         with:
           components: clippy
 
-      - name: Install dependencies
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
-
       - name: Populate target directory from cache
         uses: Leafwing-Studios/cargo-cache@v2
+        with:
+          manifest-path: bevy_ios_safearea/Cargo.toml
 
       - name: Run Clippy lints
-        run: |
-          cd bevy_ios_safearea && cargo clippy --workspace --all-features --all-targets -- --deny warnings
+        working-directory: bevy_ios_safearea
+        run: cargo clippy --workspace --all-features --all-targets -- --deny warnings
 
   # Check documentation.
   doc:
     name: Docs
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 30
     steps:
       - name: Checkout repository
@@ -65,12 +65,11 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@nightly
 
-      - name: Install dependencies
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
-
       - name: Populate target directory from cache
         uses: Leafwing-Studios/cargo-cache@v2
+        with:
+          manifest-path: bevy_ios_safearea/Cargo.toml
 
       - name: Check documentation
-        run: |
-          cd bevy_ios_safearea && cargo doc --workspace --all-features --document-private-items --no-deps
+        working-directory: bevy_ios_safearea
+        run: cargo doc --workspace --all-features --document-private-items --no-deps
