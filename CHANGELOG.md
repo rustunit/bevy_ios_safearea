@@ -23,9 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * `IosSafeArea` became a Resource
 
+## [0.1.6] - 2025-01-15
+
 ### Fixed
 
-* docs.rs fix
+* mimic `winit` docs target, hoping it fixes docs.rs
+
+### Added
+
+* CI tests
 
 ## [0.1.5] - 2025-01-15
 

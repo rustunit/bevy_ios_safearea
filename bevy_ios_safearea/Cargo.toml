@@ -10,7 +10,13 @@ keywords = ["bevy", "gamedev", "mobile", "ios", "swift"]
 description = "Bevy plugin to query device safe area insets"
 
 [package.metadata.docs.rs]
-default-target = "x86_64-apple-darwin"
+targets = [
+    # macOS
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    # iOS
+    "aarch64-apple-ios",
+]
 
 [dependencies]
 bevy = { version = "0.15", default-features = false, features = [
