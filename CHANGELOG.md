@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.1.6] - 2025-01-15
+
+### Fixed
+
+* mimic `winit` docs target, hoping it fixes docs.rs
+
+### Added
+
+* CI tests
+
 ## [0.1.5] - 2025-01-15
 
 ### Fixed
