@@ -23,4 +23,3 @@ public func safeareaRight(view: UnsafeRawPointer) -> Float32 {
     let view = Unmanaged<UIView>.fromOpaque(view).takeUnretainedValue()
     return Float32(view.safeAreaInsets.right);
 }
-

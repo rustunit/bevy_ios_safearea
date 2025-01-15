@@ -66,6 +66,14 @@ impl IosSafeAreaHelper for Option<Res<'_, IosSafeArea>> {
     fn right(&self) -> f32 {
         self.as_ref().map_or(0., |a| a.right)
     }
+
+    pub fn left(&self) -> f32 {
+        self.safe_area.map_or(0., |a| a.left)
+    }
+
+    pub fn right(&self) -> f32 {
+        self.safe_area.map_or(0., |a| a.right)
+    }
 }
 
 /// Plugin to query iOS device safe area insets.
