@@ -1,6 +1,6 @@
 [package]
 name = "bevy_ios_safearea"
-version = "0.2.0"
+version = "0.1.6"
 edition = "2021"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
