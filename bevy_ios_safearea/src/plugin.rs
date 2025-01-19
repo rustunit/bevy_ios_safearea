@@ -34,7 +34,6 @@ pub struct IosSafeArea {
     pub right: f32,
 }
 
-#[allow(dead_code)]
 /// A trait providing helper methods to access the safe area insets.
 pub trait IosSafeAreaHelper {
     /// Returns the inset from the top of the screen.
@@ -78,12 +77,11 @@ impl IosSafeAreaHelper for Option<Res<'_, IosSafeArea>> {
 ///     .add_plugins((DefaultPlugins,bevy_ios_safearea::IosSafeAreaPlugin))
 ///     .run();
 /// ```
-#[allow(dead_code)]
 #[derive(Default)]
 pub struct IosSafeAreaPlugin;
 
-#[allow(unused_variables)]
 impl Plugin for IosSafeAreaPlugin {
+    #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
     fn build(&self, app: &mut App) {
         #[cfg(target_os = "ios")]
         app.add_systems(Startup, init);
@@ -107,10 +105,14 @@ fn init(
         if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
             let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
 
-            let top = unsafe { crate::native::swift_safearea_top(ui_view) };
-            let bottom = unsafe { crate::native::swift_safearea_bottom(ui_view) };
-            let left = unsafe { crate::native::swift_safearea_left(ui_view) };
-            let right = unsafe { crate::native::swift_safearea_right(ui_view) };
+            let (top, bottom, left, right) = unsafe {
+                (
+                    crate::native::swift_safearea_top(ui_view),
+                    crate::native::swift_safearea_bottom(ui_view),
+                    crate::native::swift_safearea_left(ui_view),
+                    crate::native::swift_safearea_right(ui_view),
+                )
+            };
 
             let safe_area = IosSafeArea {
                 top,
@@ -119,8 +121,9 @@ fn init(
                 right,
             };
 
-            commands.insert_resource(safe_area);
             tracing::debug!("safe area updated: {:?}", safe_area);
+
+            commands.insert_resource(safe_area);
         }
     }
 }

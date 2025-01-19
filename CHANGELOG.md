@@ -7,16 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## [0.2.0] - Unreleased
-
-### Added
+### Changed
 
 * support `left`&`right` safearea [#9](https://github.com/rustunit/bevy_ios_safearea/pull/9)
 * `IosSafeAreaHelper` trait for simple access to the `Option<Res<IosSafeArea>>`
-
-### Changed
-
-* `IosSafeAreaResource` is removed, `IosSafeArea` became a Resource
 
 ## [0.1.6] - 2025-01-15
 
