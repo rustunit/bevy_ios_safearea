@@ -1,16 +1,15 @@
 use bevy::{ecs::system::SystemParam, prelude::*};
 
-/// Struct providing iOS device safe area insets.
+/// Resource providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
-/// It is recommended to access it from systems by using [`Option<Res<IosSafeArea>>`].
+/// It is recommended to access it from systems by using [`IosSafeArea`] SystemParam.
 ///
-/// Using [IosSafeAreaHelper] can simplify accessing it.
 /// # Example
 /// ```rust
 /// use bevy::prelude::*;
-/// use bevy_ios_safearea::{IosSafeArea, IosSafeAreaHelper};
+/// use bevy_ios_safearea::IosSafeArea;
 ///
-/// fn bevy_system(safe_area: Option<Res<IosSafeArea>>) {    
+/// fn bevy_system(safe_area: IosSafeArea) {    
 ///     let safe_area_top = safe_area.top();
 /// }
 // ```
