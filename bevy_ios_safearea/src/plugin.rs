@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{ecs::system::SystemParam, prelude::*};
 
 /// Struct providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
@@ -15,7 +15,7 @@ use bevy::prelude::*;
 /// }
 // ```
 #[derive(Resource, Clone, Debug, Default)]
-pub struct IosSafeArea {
+pub struct IosSafeAreaResource {
     /// The inset from the top of the screen.
     ///
     /// This value accounts for elements like the notch or status bar.
@@ -34,36 +34,31 @@ pub struct IosSafeArea {
     pub right: f32,
 }
 
-/// A trait providing helper methods to access the safe area insets.
-pub trait IosSafeAreaHelper {
-    /// Returns the inset from the top of the screen.
-    fn top(&self) -> f32;
-
-    /// Returns the inset from the bottom of the screen.
-    fn bottom(&self) -> f32;
-
-    /// Returns the inset from the left side of the screen.
-    fn left(&self) -> f32;
-
-    /// Returns the inset from the right side of the screen.
-    fn right(&self) -> f32;
+/// SystemParam helper allowing to read insets while defaulting to 0 if not available.
+#[derive(SystemParam)]
+pub struct IosSafeArea<'w> {
+    resource: Option<Res<'w, IosSafeAreaResource>>,
 }
 
-impl IosSafeAreaHelper for Option<Res<'_, IosSafeArea>> {
-    fn top(&self) -> f32 {
-        self.as_ref().map_or(0., |a| a.top)
+impl IosSafeArea<'_> {
+    /// top inset
+    pub fn top(&self) -> f32 {
+        self.resource.as_ref().map(|r| r.top).unwrap_or(0.)
     }
 
-    fn bottom(&self) -> f32 {
-        self.as_ref().map_or(0., |a| a.bottom)
+    /// bottom inset
+    pub fn bottom(&self) -> f32 {
+        self.resource.as_ref().map(|r| r.bottom).unwrap_or(0.)
     }
 
-    fn left(&self) -> f32 {
-        self.as_ref().map_or(0., |a| a.left)
+    /// left inset
+    pub fn left(&self) -> f32 {
+        self.resource.as_ref().map(|r| r.left).unwrap_or(0.)
     }
 
-    fn right(&self) -> f32 {
-        self.as_ref().map_or(0., |a| a.right)
+    /// right inset
+    pub fn right(&self) -> f32 {
+        self.resource.as_ref().map(|r| r.right).unwrap_or(0.)
     }
 }
 
@@ -114,7 +109,7 @@ fn init(
                 )
             };
 
-            let safe_area = IosSafeArea {
+            let safe_area = IosSafeAreaResource {
                 top,
                 bottom,
                 left,
