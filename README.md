@@ -57,9 +57,9 @@ Accessing it:
 
 ```rust
 use bevy::prelude::*;
-use bevy_ios_safearea::{IosSafeArea, IosSafeAreaHelper};
+use bevy_ios_safearea::IosSafeArea;
 
-fn bevy_system(safe_area: Option<Res<IosSafeArea>>) {    
+fn bevy_system(safe_area: IosSafeArea) {    
     let safe_area_top = safe_area.top();
 }
 ```
