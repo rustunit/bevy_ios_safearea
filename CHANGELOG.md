@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.0] - 2025-01-20
+
 ### Changed
 
 * support `left`&`right` safearea [#9](https://github.com/rustunit/bevy_ios_safearea/pull/9)
