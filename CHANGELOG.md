@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
+### Changed
 
 * support `left`&`right` safearea [#9](https://github.com/rustunit/bevy_ios_safearea/pull/9)
- 
+* make `IosSafeArea` a `SystemParam` as main interface to use this crate [#10](https://github.com/rustunit/bevy_ios_safearea/pull/10)
+
 ## [0.1.6] - 2025-01-15
 
 ### Fixed

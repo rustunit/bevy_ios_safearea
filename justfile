@@ -1,7 +1,10 @@
+[working-directory: 'bevy_ios_safearea']
 check:
-	cd bevy_ios_safearea/src && cargo c --target=aarch64-apple-ios
-	cd bevy_ios_safearea/src && cargo b
-	cd bevy_ios_safearea/src && cargo clippy
+	cargo c --target=aarch64-apple-ios
+	cargo b
+	cargo clippy
+	cargo doc --workspace --all-features --document-private-items --no-deps
 
+[working-directory: 'bevy_ios_safearea']
 publish:
-	cd bevy_ios_safearea/ && cargo publish
+	cargo publish

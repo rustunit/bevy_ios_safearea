@@ -1,8 +1,20 @@
-use bevy::prelude::*;
+use bevy::{ecs::system::SystemParam, prelude::*};
 
-/// Struct providing iOS device safe area insets.
-#[derive(Copy, Clone, Debug, Default)]
-pub struct IosSafeArea {
+/// Resource providing iOS device safe area insets.
+/// It is created and added only when there are insets on the running device.
+/// It is recommended to access it from systems by using [`IosSafeArea`] SystemParam.
+///
+/// # Example
+/// ```rust
+/// use bevy::prelude::*;
+/// use bevy_ios_safearea::IosSafeArea;
+///
+/// fn bevy_system(safe_area: IosSafeArea) {    
+///     let safe_area_top = safe_area.top();
+/// }
+// ```
+#[derive(Resource, Clone, Debug, Default)]
+pub struct IosSafeAreaResource {
     /// The inset from the top of the screen.
     ///
     /// This value accounts for elements like the notch or status bar.
@@ -21,36 +33,50 @@ pub struct IosSafeArea {
     pub right: f32,
 }
 
-#[derive(Resource, Clone, Debug, Default)]
-pub struct IosSafeAreaResource {
-    pub safe_area: Option<IosSafeArea>,
+/// SystemParam helper allowing to read insets while defaulting to 0 if not available.
+#[derive(SystemParam)]
+pub struct IosSafeArea<'w> {
+    resource: Option<Res<'w, IosSafeAreaResource>>,
 }
 
-impl IosSafeAreaResource {
+impl IosSafeArea<'_> {
+    /// top inset
     pub fn top(&self) -> f32 {
-        self.safe_area.map_or(0., |a| a.top)
+        self.resource.as_ref().map(|r| r.top).unwrap_or(0.)
     }
 
+    /// bottom inset
     pub fn bottom(&self) -> f32 {
-        self.safe_area.map_or(0., |a| a.bottom)
+        self.resource.as_ref().map(|r| r.bottom).unwrap_or(0.)
     }
 
+    /// left inset
     pub fn left(&self) -> f32 {
-        self.safe_area.map_or(0., |a| a.left)
+        self.resource.as_ref().map(|r| r.left).unwrap_or(0.)
     }
 
+    /// right inset
     pub fn right(&self) -> f32 {
-        self.safe_area.map_or(0., |a| a.right)
+        self.resource.as_ref().map(|r| r.right).unwrap_or(0.)
     }
 }
 
-#[allow(dead_code)]
+/// Plugin to query iOS device safe area insets.
+///
+/// # Example
+/// ```no_run
+/// use bevy::prelude::*;
+///
+/// App::new()
+///     .add_plugins((DefaultPlugins,bevy_ios_safearea::IosSafeAreaPlugin))
+///     .run();
+/// ```
 #[derive(Default)]
 pub struct IosSafeAreaPlugin;
 
 impl Plugin for IosSafeAreaPlugin {
+    #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
     fn build(&self, app: &mut App) {
-        app.init_resource::<IosSafeAreaResource>();
         #[cfg(target_os = "ios")]
         app.add_systems(Startup, init);
     }
@@ -60,7 +86,7 @@ impl Plugin for IosSafeAreaPlugin {
 fn init(
     windows: NonSend<bevy::winit::WinitWindows>,
     window_query: Query<Entity, With<bevy::window::PrimaryWindow>>,
-    mut res: ResMut<IosSafeAreaResource>,
+    mut commands: Commands,
 ) {
     use bevy::utils::tracing;
     use winit::raw_window_handle::HasWindowHandle;
@@ -73,12 +99,16 @@ fn init(
         if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
             let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
 
-            let top = unsafe { crate::native::swift_safearea_top(ui_view) };
-            let bottom = unsafe { crate::native::swift_safearea_bottom(ui_view) };
-            let left = unsafe { crate::native::swift_safearea_left(ui_view) };
-            let right = unsafe { crate::native::swift_safearea_right(ui_view) };
+            let (top, bottom, left, right) = unsafe {
+                (
+                    crate::native::swift_safearea_top(ui_view),
+                    crate::native::swift_safearea_bottom(ui_view),
+                    crate::native::swift_safearea_left(ui_view),
+                    crate::native::swift_safearea_right(ui_view),
+                )
+            };
 
-            let safe_area = IosSafeArea {
+            let safe_area = IosSafeAreaResource {
                 top,
                 bottom,
                 left,
@@ -87,7 +117,7 @@ fn init(
 
             tracing::debug!("safe area updated: {:?}", safe_area);
 
-            res.safe_area = Some(safe_area);
+            commands.insert_resource(safe_area);
         }
     }
 }

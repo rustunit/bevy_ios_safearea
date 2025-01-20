@@ -4,4 +4,4 @@
 mod native;
 mod plugin;
 
-pub use plugin::{IosSafeAreaPlugin, IosSafeAreaResource};
+pub use plugin::{IosSafeArea, IosSafeAreaPlugin, IosSafeAreaResource};

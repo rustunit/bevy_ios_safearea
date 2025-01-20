@@ -18,10 +18,13 @@ targets = [
     "aarch64-apple-ios",
 ]
 
-
 [dependencies]
 bevy = { version = "0.15", default-features = false, features = [
     "bevy_window",
     "bevy_winit",
 ] }
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
+
+
+[lints.rust]
+missing_docs = "warn"

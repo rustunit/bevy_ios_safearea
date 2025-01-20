@@ -46,13 +46,20 @@ bevy_ios_safearea = { version = "=0.1.0" }
 
 Initialize Bevy Plugin:
 
-```rust,ignore
+```rust
 // request initialisation right on startup
-app.add_plugins(IosSafeAreaPlugin);
+use bevy::prelude::*;
+App::new()
+    .add_plugins((DefaultPlugins,bevy_ios_safearea::IosSafeAreaPlugin));
 ```
 
-```rust,ignore
-fn bevy_system(safe_area: Res<IosSafeAreaResource>) {
+Accessing it:
+
+```rust
+use bevy::prelude::*;
+use bevy_ios_safearea::IosSafeArea;
+
+fn bevy_system(safe_area: IosSafeArea) {    
     let safe_area_top = safe_area.top();
 }
 ```
@@ -86,4 +93,5 @@ All code in this repository is dual-licensed under either:
 at your option. This means you can select the license you prefer.
 
 ## Your contributions
+
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
