@@ -9,7 +9,7 @@ use bevy::{ecs::system::SystemParam, prelude::*};
 /// use bevy::prelude::*;
 /// use bevy_ios_safearea::IosSafeArea;
 ///
-/// fn bevy_system(safe_area: IosSafeArea) {    
+/// fn bevy_system(safe_area: IosSafeArea) {
 ///     let safe_area_top = safe_area.top();
 /// }
 // ```
@@ -85,16 +85,15 @@ impl Plugin for IosSafeAreaPlugin {
 #[cfg(target_os = "ios")]
 fn init(
     windows: NonSend<bevy::winit::WinitWindows>,
-    window_query: Query<Entity, With<bevy::window::PrimaryWindow>>,
+    window: Single<Entity, With<bevy::window::PrimaryWindow>>,
     mut commands: Commands,
 ) {
-    use bevy::utils::tracing;
+    use bevy::log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
     tracing::debug!("safe area updating");
 
-    let entity = window_query.single();
-    let raw_window = windows.get_window(entity).expect("invalid window handle");
+    let raw_window = windows.get_window(*window).expect("invalid window handle");
     if let Ok(handle) = raw_window.window_handle() {
         if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
             let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();

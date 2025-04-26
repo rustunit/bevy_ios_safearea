@@ -1,7 +1,7 @@
 [package]
 name = "bevy_ios_safearea"
-version = "0.2.0"
-edition = "2021"
+version = "0.3.0"
+edition = "2024"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
 documentation = "https://docs.rs/bevy_ios_safearea"
@@ -19,9 +19,10 @@ targets = [
 ]
 
 [dependencies]
-bevy = { version = "0.15", default-features = false, features = [
+bevy = { version = "0.16", default-features = false, features = [
     "bevy_window",
     "bevy_winit",
+    "bevy_log",
 ] }
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 

@@ -27,19 +27,19 @@ Bevy plugin to query ios device safe area insets.
 ### 1. Add to XCode
 
 * Go to `File` -> `Add Package Dependencies` and paste `https://github.com/rustunit/bevy_ios_safearea.git` into the search bar on the top right:
-    ![xcode](./assets/xcode-spm.png)
+  ![xcode](./assets/xcode-spm.png)
 
 ### 2. Add Rust dependency
 
 ```sh
 cargo add bevy_ios_safearea
-``` 
+```
 
-or 
+or
 
 ```toml
 # always pin to the same exact version you also of the Swift package
-bevy_ios_safearea = { version = "=0.2.0" }
+bevy_ios_safearea = { version = "=0.3.0" }
 ```
 
 ### 3. Setup Plugin in Bevy
@@ -59,7 +59,7 @@ Accessing it:
 use bevy::prelude::*;
 use bevy_ios_safearea::IosSafeArea;
 
-fn bevy_system(safe_area: IosSafeArea) {    
+fn bevy_system(safe_area: IosSafeArea) {
     let safe_area_top = safe_area.top();
 }
 ```
@@ -81,7 +81,8 @@ fn bevy_system(safe_area: IosSafeArea) {
 
 |bevy|crate|
 |----|---|
-|0.15|0.1,0.2,main|
+|0.16|0.3,main|
+|0.15|0.1,0.2|
 
 # License
 
