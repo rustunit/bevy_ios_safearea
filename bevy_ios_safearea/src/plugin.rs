@@ -98,7 +98,7 @@ impl Plugin for IosSafeAreaPlugin {
 fn init(mut commands: Commands) {
     use bevy::log::tracing;
     tracing::debug!("safe area updating");
-    let insets = crate::android::try_get_insets();
+    let insets = crate::android::try_get_safe_area();
     if let Some(insets) = insets {
         tracing::debug!("safe area updated: {:?}", &insets);
         commands.insert_resource(insets);

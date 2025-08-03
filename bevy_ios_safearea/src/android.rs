@@ -1,8 +1,8 @@
-//! Android implementation of the safe area plugin.
 use crate::IosSafeAreaResource;
 
+/// Get the safe area insets for Android.
 #[cfg(target_os = "android")]
-pub(crate) fn try_get_insets() -> Option<IosSafeAreaResource> {
+pub(crate) fn try_get_safe_area() -> Option<IosSafeAreaResource> {
     use jni::{
         objects::JObject,
         sys::{_jobject, JNIInvokeInterface_},
