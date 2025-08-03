@@ -84,7 +84,7 @@ impl Plugin for IosSafeAreaPlugin {
 }
 
 #[cfg(any(target_os = "ios", target_os = "android"))]
-fn init(mut world: World) {
+fn init(world: &mut World) {
     use bevy::log::tracing;
     tracing::debug!("safe area updating");
     #[cfg(target_os = "android")]
