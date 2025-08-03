@@ -22,8 +22,7 @@ targets = [
 ]
 
 [features]
-default = ["android-game-activity", "update_on_resize"]
-update_on_resize = []
+default = ["android-game-activity"]
 android-game-activity = ["bevy/android-game-activity"]
 android-native-activity = ["bevy/android-native-activity", "bevy/android_shared_stdcxx"]
 
