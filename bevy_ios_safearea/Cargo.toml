@@ -16,16 +16,29 @@ targets = [
     "x86_64-apple-darwin",
     # iOS
     "aarch64-apple-ios",
+    # android
+    "aarch64-linux-android",
+    "armv7-linux-androideabi"
 ]
+
+[features]
+default = ["android-game-activity", "update_on_resize"]
+update_on_resize = []
+android-game-activity = ["bevy/android-game-activity"]
+android-native-activity = ["bevy/android-native-activity", "bevy/android_shared_stdcxx"]
 
 [dependencies]
 bevy = { version = "0.16", default-features = false, features = [
     "bevy_window",
     "bevy_winit",
-    "bevy_log",
+    "bevy_log"
 ] }
+
+[target.'cfg(target_os = "ios")'.dependencies]
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 
+[target.'cfg(target_os = "android")'.dependencies]
+jni = "0.21"
 
 [lints.rust]
 missing_docs = "warn"

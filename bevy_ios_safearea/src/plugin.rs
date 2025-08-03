@@ -75,10 +75,35 @@ impl IosSafeArea<'_> {
 pub struct IosSafeAreaPlugin;
 
 impl Plugin for IosSafeAreaPlugin {
-    #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
+    #[cfg_attr(
+        not(any(target_os = "ios", target_os = "android")),
+        allow(unused_variables)
+    )]
     fn build(&self, app: &mut App) {
-        #[cfg(target_os = "ios")]
-        app.add_systems(Startup, init);
+        #[cfg(any(target_os = "ios", target_os = "android"))]
+        {
+            app.add_systems(Startup, init);
+            #[cfg(feature = "update_on_resize")]
+            {
+                fn any_window_changed(query: Query<(), Changed<Window>>) -> bool {
+                    !query.is_empty()
+                }
+                app.add_systems(Update, init.run_if(any_window_changed));
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "android")]
+fn init(mut commands: Commands) {
+    use bevy::log::tracing;
+    tracing::debug!("safe area updating");
+    let insets = crate::android::try_get_insets();
+    if let Some(insets) = insets {
+        tracing::debug!("safe area updated: {:?}", &insets);
+        commands.insert_resource(insets);
+    } else {
+        tracing::debug!("safe area- no insets got");
     }
 }
 
