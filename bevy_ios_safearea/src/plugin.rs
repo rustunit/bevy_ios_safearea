@@ -106,8 +106,9 @@ fn ios_read_safe_area(world: &World) -> Option<IosSafeAreaResource> {
         .query_filtered::<Entity, With<bevy::window::PrimaryWindow>>()
         .single(&world)
         .ok()?;
-    let windows = world.non_send_resource::<bevy::winit::WinitWindows>();
-    let raw_window = windows.get_window(window)?;
+    let raw_window = world
+        .non_send_resource::<bevy::winit::WinitWindows>()
+        .get_window(window)?;
     let handle = raw_window.window_handle().ok()?;
     let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() else {
         return None;
