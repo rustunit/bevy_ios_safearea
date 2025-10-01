@@ -1,5 +1,10 @@
-use bevy::{ecs::system::SystemParam, prelude::*};
-
+use bevy_app::{App, Plugin};
+use bevy_ecs::{
+    reflect::ReflectResource,
+    resource::Resource,
+    system::{Res, SystemParam},
+};
+use bevy_reflect::Reflect;
 /// Resource providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
 /// It is recommended to access it from systems by using [`IosSafeArea`] SystemParam.
@@ -86,8 +91,8 @@ impl Plugin for IosSafeAreaPlugin {
 }
 
 #[cfg(target_os = "android")]
-fn init(mut commands: Commands) {
-    use bevy::log::tracing;
+fn init(mut commands: bevy_ecs::system::Commands) {
+    use bevy_log::tracing;
     tracing::debug!("safe area updating");
     let insets = crate::android::try_get_safe_area();
     if let Some(insets) = insets {
@@ -100,11 +105,14 @@ fn init(mut commands: Commands) {
 
 #[cfg(target_os = "ios")]
 fn init(
-    windows: NonSend<bevy::winit::WinitWindows>,
-    window: Single<Entity, With<bevy::window::PrimaryWindow>>,
-    mut commands: Commands,
+    windows: bevy_ecs::system::NonSend<bevy_winit::WinitWindows>,
+    window: bevy_ecs::system::Single<
+        bevy_ecs::entity::Entity,
+        bevy_ecs::query::With<bevy_window::PrimaryWindow>,
+    >,
+    mut commands: bevy_ecs::system::Commands,
 ) {
-    use bevy::log::tracing;
+    use bevy_log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
     tracing::debug!("safe area updating");

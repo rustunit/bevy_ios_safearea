@@ -8,7 +8,7 @@ pub(crate) fn try_get_safe_area() -> Option<IosSafeAreaResource> {
         sys::{_jobject, JNIInvokeInterface_},
     };
 
-    let android_app = bevy::window::ANDROID_APP.get()?;
+    let android_app = bevy_window::ANDROID_APP.get()?;
     let vm = unsafe {
         jni::JavaVM::from_raw(android_app.vm_as_ptr() as *mut *const JNIInvokeInterface_).ok()?
     };
