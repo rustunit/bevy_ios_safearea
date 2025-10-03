@@ -93,10 +93,7 @@ impl Plugin for IosSafeAreaPlugin {
 #[cfg(target_os = "android")]
 fn init(mut commands: bevy_ecs::system::Commands) {
     use bevy_log::tracing;
-    #[cfg(all(
-        target_os = "android",
-        any(feature = "android-native-activity", feature = "android-game-activity")
-    ))]
+
     let insets = if cfg!(any(
         feature = "android-native-activity",
         feature = "android-game-activity"
