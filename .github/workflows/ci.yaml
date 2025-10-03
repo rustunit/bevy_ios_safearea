@@ -64,15 +64,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-
       - name: Add Android targets
-        run: rustup target add aarch64-linux-android armv7-linux-androideabi
-      - name: Install cargo-binstall
-        run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      - name: Install xbuild
-        run: cargo binstall --git https://github.com/NiklasEi/xbuild --bin-dir x xbuild -y
+        run: rustup target add aarch64-linux-android
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-ndk
+
       - name: Populate target directory from cache
         uses: Leafwing-Studios/cargo-cache@v2
         with:
@@ -80,11 +85,11 @@ jobs:
 
       - name: Build for Android- game activity
         working-directory: bevy_ios_safearea
-        run: x build --platform android --arch arm64 --features android-game-activity
+        run: cargo ndk build --workspace --features android-game-activity --target aarch64-linux-android
 
       - name: Build for Android- native activity
         working-directory: bevy_ios_safearea
-        run: x build --platform android --arch arm64 --features android-native-activity
+        run: cargo ndk build ---workspace --features android-native-activity --target aarch64-linux-android
 
   # Check documentation.
   doc:
