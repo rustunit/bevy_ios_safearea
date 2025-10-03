@@ -89,7 +89,7 @@ jobs:
 
       - name: Build for Android- native activity
         working-directory: bevy_ios_safearea
-        run: cargo ndk build ---workspace --features android-native-activity --target aarch64-linux-android
+        run: cargo ndk build --workspace --features android-native-activity --target aarch64-linux-android
 
   # Check documentation.
   doc:
