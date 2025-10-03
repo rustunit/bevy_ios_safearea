@@ -66,8 +66,9 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-linux-android
+
+      - name: Add Android targets
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi
 
       - name: Populate target directory from cache
         uses: Leafwing-Studios/cargo-cache@v2
