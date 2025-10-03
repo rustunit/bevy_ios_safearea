@@ -71,9 +71,13 @@ jobs:
         with:
           manifest-path: bevy_ios_safearea/Cargo.toml
 
-      - name: Build for Android
+      - name: Build for Android- game activity
         working-directory: bevy_ios_safearea
-        run: cargo build --workspace --all-features --target aarch64-linux-android
+        run: cargo build --workspace --features android-game-activity --target aarch64-linux-android
+
+      - name: Build for Android- native activity
+        working-directory: bevy_ios_safearea
+        run: cargo build --workspace --features android-native-activity --target aarch64-linux-android
 
   # Check documentation.
   doc:

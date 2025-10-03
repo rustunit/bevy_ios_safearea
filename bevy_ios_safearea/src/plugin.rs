@@ -85,7 +85,7 @@ impl Plugin for IosSafeAreaPlugin {
         app.register_type::<IosSafeAreaResource>();
         #[cfg(any(target_os = "ios", target_os = "android"))]
         {
-            app.add_systems(Startup, init);
+            app.add_systems(bevy_app::Startup, init);
         }
     }
 }
@@ -93,8 +93,19 @@ impl Plugin for IosSafeAreaPlugin {
 #[cfg(target_os = "android")]
 fn init(mut commands: bevy_ecs::system::Commands) {
     use bevy_log::tracing;
-    tracing::debug!("safe area updating");
-    let insets = crate::android::try_get_safe_area();
+    #[cfg(all(
+        target_os = "android",
+        any(feature = "android-native-activity", feature = "android-game-activity")
+    ))]
+    let insets = if cfg!(any(
+        feature = "android-native-activity",
+        feature = "android-game-activity"
+    )) {
+        tracing::debug!("safe area updating");
+        crate::android::try_get_safe_area()
+    } else {
+        None
+    };
     if let Some(insets) = insets {
         tracing::debug!("safe area updated: {:?}", &insets);
         commands.insert_resource(insets);
