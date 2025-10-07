@@ -39,7 +39,7 @@ or
 
 ```toml
 # always pin to the same exact version you also of the Swift package
-bevy_ios_safearea = { version = "=0.3.0" }
+bevy_ios_safearea = { version = "=0.4.0" }
 ```
 
 ### 3. Setup Plugin in Bevy
@@ -81,7 +81,8 @@ fn bevy_system(safe_area: IosSafeArea) {
 
 |bevy|crate|
 |----|---|
-|0.16|0.3,main|
+|0.17|0.4,main|
+|0.16|0.3|
 |0.15|0.1,0.2|
 
 # License
