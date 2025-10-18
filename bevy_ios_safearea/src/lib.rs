@@ -9,4 +9,4 @@ mod android;
 mod native;
 mod plugin;
 
-pub use plugin::{IosSafeArea, IosSafeAreaPlugin, IosSafeAreaResource};
+pub use plugin::{IosSafeArea, IosSafeAreaPlugin, IosSafeAreaResource, SafeAreaExt};

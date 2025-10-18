@@ -67,6 +67,19 @@ impl IosSafeArea<'_> {
     }
 }
 
+/// Helper trait for updating insets.
+pub trait SafeAreaExt {
+    /// Force refresh of insets.
+    fn update_safe_area(&mut self) -> &mut Self;
+}
+
+impl SafeAreaExt for bevy_ecs::system::Commands<'_, '_> {
+    fn update_safe_area(&mut self) -> &mut Self {
+        #[cfg(any(target_os = "android", target_os = "ios"))]
+        self.run_system_cached(init);
+        self
+    }
+}
 /// Plugin to query iOS device safe area insets.
 ///
 /// # Example
