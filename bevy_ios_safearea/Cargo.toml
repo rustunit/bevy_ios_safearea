@@ -1,6 +1,6 @@
 [package]
 name = "bevy_ios_safearea"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2024"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
@@ -19,13 +19,12 @@ targets = [
 ]
 
 [dependencies]
-bevy = { version = "0.16", default-features = false, features = [
+bevy = { version = "0.17", default-features = false, features = [
     "bevy_window",
     "bevy_winit",
     "bevy_log",
 ] }
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
-
 
 [lints.rust]
 missing_docs = "warn"

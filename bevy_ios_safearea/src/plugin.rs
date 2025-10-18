@@ -84,7 +84,7 @@ impl Plugin for IosSafeAreaPlugin {
 
 #[cfg(target_os = "ios")]
 fn init(
-    windows: NonSend<bevy::winit::WinitWindows>,
+    _non_send_marker: bevy::ecs::system::NonSendMarker,
     window: Single<Entity, With<bevy::window::PrimaryWindow>>,
     mut commands: Commands,
 ) {
@@ -93,30 +93,32 @@ fn init(
 
     tracing::debug!("safe area updating");
 
-    let raw_window = windows.get_window(*window).expect("invalid window handle");
-    if let Ok(handle) = raw_window.window_handle() {
-        if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
-            let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
+    bevy::winit::WINIT_WINDOWS.with_borrow(|windows| {
+        let raw_window = windows.get_window(*window).expect("invalid window handle");
+        if let Ok(handle) = raw_window.window_handle() {
+            if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
+                let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
 
-            let (top, bottom, left, right) = unsafe {
-                (
-                    crate::native::swift_safearea_top(ui_view),
-                    crate::native::swift_safearea_bottom(ui_view),
-                    crate::native::swift_safearea_left(ui_view),
-                    crate::native::swift_safearea_right(ui_view),
-                )
-            };
+                let (top, bottom, left, right) = unsafe {
+                    (
+                        crate::native::swift_safearea_top(ui_view),
+                        crate::native::swift_safearea_bottom(ui_view),
+                        crate::native::swift_safearea_left(ui_view),
+                        crate::native::swift_safearea_right(ui_view),
+                    )
+                };
 
-            let safe_area = IosSafeAreaResource {
-                top,
-                bottom,
-                left,
-                right,
-            };
+                let safe_area = IosSafeAreaResource {
+                    top,
+                    bottom,
+                    left,
+                    right,
+                };
 
-            tracing::debug!("safe area updated: {:?}", safe_area);
+                tracing::debug!("safe area updated: {:?}", safe_area);
 
-            commands.insert_resource(safe_area);
+                commands.insert_resource(safe_area);
+            }
         }
-    }
+    });
 }
