@@ -1,5 +1,10 @@
-use bevy::{ecs::system::SystemParam, prelude::*};
-
+use bevy_app::{App, Plugin};
+use bevy_ecs::{
+    reflect::ReflectResource,
+    resource::Resource,
+    system::{Res, SystemParam},
+};
+use bevy_reflect::Reflect;
 /// Resource providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
 /// It is recommended to access it from systems by using [`IosSafeArea`] SystemParam.
@@ -12,8 +17,9 @@ use bevy::{ecs::system::SystemParam, prelude::*};
 /// fn bevy_system(safe_area: IosSafeArea) {
 ///     let safe_area_top = safe_area.top();
 /// }
-// ```
-#[derive(Resource, Clone, Debug, Default)]
+/// ```
+#[derive(Resource, Clone, Debug, Default, Reflect)]
+#[reflect(Resource)]
 pub struct IosSafeAreaResource {
     /// The inset from the top of the screen.
     ///
@@ -61,6 +67,19 @@ impl IosSafeArea<'_> {
     }
 }
 
+/// Helper trait for updating insets.
+pub trait SafeAreaExt {
+    /// Force refresh of insets.
+    fn update_safe_area(&mut self) -> &mut Self;
+}
+
+impl SafeAreaExt for bevy_ecs::system::Commands<'_, '_> {
+    fn update_safe_area(&mut self) -> &mut Self {
+        #[cfg(any(target_os = "android", target_os = "ios"))]
+        self.run_system_cached(init);
+        self
+    }
+}
 /// Plugin to query iOS device safe area insets.
 ///
 /// # Example
@@ -75,23 +94,61 @@ impl IosSafeArea<'_> {
 pub struct IosSafeAreaPlugin;
 
 impl Plugin for IosSafeAreaPlugin {
-    #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
     fn build(&self, app: &mut App) {
+        app.register_type::<IosSafeAreaResource>();
         #[cfg(target_os = "ios")]
-        app.add_systems(Startup, init);
+        {
+            app.add_systems(bevy_app::Startup, init);
+        }
+        #[cfg(target_os = "android")]
+        {
+            use bevy_ecs::schedule::IntoScheduleConfigs;
+            app.add_systems(bevy_app::Update, init.run_if(on_application_running));
+        }
+    }
+}
+
+#[cfg(target_os = "android")]
+fn on_application_running(
+    mut app_lifecycle_reader: bevy_ecs::event::EventReader<bevy_window::AppLifecycle>,
+) -> bool {
+    app_lifecycle_reader
+        .read()
+        .any(|e| matches!(e, bevy_window::AppLifecycle::Running))
+}
+
+#[cfg(target_os = "android")]
+fn init(mut commands: bevy_ecs::system::Commands) {
+    let insets = if cfg!(any(
+        feature = "android-native-activity",
+        feature = "android-game-activity"
+    )) {
+        bevy_log::debug!("safe area updating");
+        crate::android::try_get_safe_area()
+    } else {
+        bevy_log::debug!("No feature for android is enabled. No insets read.");
+        None
+    };
+    if let Some(insets) = insets {
+        bevy_log::debug!("safe area updated: {:?}", &insets);
+        commands.insert_resource(insets);
+    } else {
+        bevy_log::debug!("safe area- no insets got");
     }
 }
 
 #[cfg(target_os = "ios")]
 fn init(
-    windows: NonSend<bevy::winit::WinitWindows>,
-    window: Single<Entity, With<bevy::window::PrimaryWindow>>,
-    mut commands: Commands,
+    windows: bevy_ecs::system::NonSend<bevy_winit::WinitWindows>,
+    window: bevy_ecs::system::Single<
+        bevy_ecs::entity::Entity,
+        bevy_ecs::query::With<bevy_window::PrimaryWindow>,
+    >,
+    mut commands: bevy_ecs::system::Commands,
 ) {
-    use bevy::log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
-    tracing::debug!("safe area updating");
+    bevy_log::debug!("safe area updating");
 
     let raw_window = windows.get_window(*window).expect("invalid window handle");
     if let Ok(handle) = raw_window.window_handle() {
@@ -114,7 +171,7 @@ fn init(
                 right,
             };
 
-            tracing::debug!("safe area updated: {:?}", safe_area);
+            bevy_log::debug!("safe area updated: {:?}", safe_area);
 
             commands.insert_resource(safe_area);
         }
