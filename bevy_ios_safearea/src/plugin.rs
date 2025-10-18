@@ -92,22 +92,21 @@ impl Plugin for IosSafeAreaPlugin {
 
 #[cfg(target_os = "android")]
 fn init(mut commands: bevy_ecs::system::Commands) {
-    use bevy_log::tracing;
-
     let insets = if cfg!(any(
         feature = "android-native-activity",
         feature = "android-game-activity"
     )) {
-        tracing::debug!("safe area updating");
+        bevy_log::debug!("safe area updating");
         crate::android::try_get_safe_area()
     } else {
+        bevy_log::debug!("No feature for android is enabled. No insets read.");
         None
     };
     if let Some(insets) = insets {
-        tracing::debug!("safe area updated: {:?}", &insets);
+        bevy_log::debug!("safe area updated: {:?}", &insets);
         commands.insert_resource(insets);
     } else {
-        tracing::debug!("safe area- no insets got");
+        bevy_log::debug!("safe area- no insets got");
     }
 }
 
@@ -120,10 +119,9 @@ fn init(
     >,
     mut commands: bevy_ecs::system::Commands,
 ) {
-    use bevy_log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
-    tracing::debug!("safe area updating");
+    bevy_log::debug!("safe area updating");
 
     let raw_window = windows.get_window(*window).expect("invalid window handle");
     if let Ok(handle) = raw_window.window_handle() {
@@ -146,7 +144,7 @@ fn init(
                 right,
             };
 
-            tracing::debug!("safe area updated: {:?}", safe_area);
+            bevy_log::debug!("safe area updated: {:?}", safe_area);
 
             commands.insert_resource(safe_area);
         }
