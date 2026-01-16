@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.5.1] - 2026-01-16
+
+### Changed
+* use granular bevy_* parts as dependencies
+ 
 ## [0.5.0] - 2026-01-16
 
 ### Changed

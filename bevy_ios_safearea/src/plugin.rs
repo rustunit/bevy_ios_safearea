@@ -1,4 +1,5 @@
-use bevy::{ecs::system::SystemParam, prelude::*};
+use bevy_app::prelude::*;
+use bevy_ecs::{prelude::*, system::SystemParam};
 
 /// Resource providing iOS device safe area insets.
 /// It is created and added only when there are insets on the running device.
@@ -84,16 +85,16 @@ impl Plugin for IosSafeAreaPlugin {
 
 #[cfg(target_os = "ios")]
 fn init(
-    _non_send_marker: bevy::ecs::system::NonSendMarker,
-    window: Single<Entity, With<bevy::window::PrimaryWindow>>,
+    _non_send_marker: bevy_ecs::system::NonSendMarker,
+    window: Single<Entity, With<bevy_window::PrimaryWindow>>,
     mut commands: Commands,
 ) {
-    use bevy::log::tracing;
+    use bevy_log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
     tracing::debug!("safe area updating");
 
-    bevy::winit::WINIT_WINDOWS.with_borrow(|windows| {
+    bevy_winit::WINIT_WINDOWS.with_borrow(|windows| {
         let raw_window = windows.get_window(*window).expect("invalid window handle");
         if let Ok(handle) = raw_window.window_handle() {
             if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
