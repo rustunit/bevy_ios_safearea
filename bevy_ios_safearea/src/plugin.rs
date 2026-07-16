@@ -78,8 +78,13 @@ pub struct IosSafeAreaPlugin;
 impl Plugin for IosSafeAreaPlugin {
     #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
     fn build(&self, app: &mut App) {
+        // `init` runs in `Update` (not `Startup`) because the winit `UIWindow` is not
+        // guaranteed to be registered in `WINIT_WINDOWS` during the first frame — window
+        // creation is event-loop-driven on iOS and can complete a frame or two after
+        // Bevy's first update. `init` retries until the handle is available, then
+        // disables itself.
         #[cfg(target_os = "ios")]
-        app.add_systems(Startup, init);
+        app.add_systems(Update, init);
     }
 }
 
@@ -88,38 +93,55 @@ fn init(
     _non_send_marker: bevy_ecs::system::NonSendMarker,
     window: Single<Entity, With<bevy_window::PrimaryWindow>>,
     mut commands: Commands,
+    mut done: Local<bool>,
 ) {
     use bevy_log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
+    if *done {
+        return;
+    }
+
     tracing::debug!("safe area updating");
 
-    bevy_winit::WINIT_WINDOWS.with_borrow(|windows| {
-        let raw_window = windows.get_window(*window).expect("invalid window handle");
-        if let Ok(handle) = raw_window.window_handle() {
-            if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
-                let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
+    let insets = bevy_winit::WINIT_WINDOWS.with_borrow(|windows| {
+        // The OS window may not be registered yet during early frames; retry next
+        // frame instead of panicking.
+        let Some(raw_window) = windows.get_window(*window) else {
+            tracing::debug!("safe area: window handle not ready yet, retrying next frame");
+            return None;
+        };
 
-                let (top, bottom, left, right) = unsafe {
-                    (
-                        crate::native::swift_safearea_top(ui_view),
-                        crate::native::swift_safearea_bottom(ui_view),
-                        crate::native::swift_safearea_left(ui_view),
-                        crate::native::swift_safearea_right(ui_view),
-                    )
-                };
+        let Ok(handle) = raw_window.window_handle() else {
+            return None;
+        };
 
-                let safe_area = IosSafeAreaResource {
-                    top,
-                    bottom,
-                    left,
-                    right,
-                };
+        if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
+            let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
 
-                tracing::debug!("safe area updated: {:?}", safe_area);
+            let (top, bottom, left, right) = unsafe {
+                (
+                    crate::native::swift_safearea_top(ui_view),
+                    crate::native::swift_safearea_bottom(ui_view),
+                    crate::native::swift_safearea_left(ui_view),
+                    crate::native::swift_safearea_right(ui_view),
+                )
+            };
 
-                commands.insert_resource(safe_area);
-            }
+            Some(IosSafeAreaResource {
+                top,
+                bottom,
+                left,
+                right,
+            })
+        } else {
+            None
         }
     });
+
+    if let Some(safe_area) = insets {
+        tracing::debug!("safe area updated: {:?}", safe_area);
+        commands.insert_resource(safe_area);
+        *done = true;
+    }
 }
