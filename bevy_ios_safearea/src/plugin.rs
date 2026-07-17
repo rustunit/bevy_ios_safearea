@@ -78,11 +78,12 @@ pub struct IosSafeAreaPlugin;
 impl Plugin for IosSafeAreaPlugin {
     #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
     fn build(&self, app: &mut App) {
-        // `init` runs in `Update` (not `Startup`) because the winit `UIWindow` is not
-        // guaranteed to be registered in `WINIT_WINDOWS` during the first frame — window
-        // creation is event-loop-driven on iOS and can complete a frame or two after
-        // Bevy's first update. `init` retries until the handle is available, then
-        // disables itself.
+        // `init` reacts to `WindowCreated` instead of running once at `Startup`: the
+        // winit `UIWindow` is not guaranteed to be registered in `WINIT_WINDOWS` during
+        // the first frame — window creation is event-loop-driven on iOS and can complete
+        // a frame or two after Bevy's first update. `bevy_winit` writes `WindowCreated`
+        // immediately after registering the window, so that message is the earliest
+        // point where the handle is guaranteed to be available.
         #[cfg(target_os = "ios")]
         app.add_systems(Update, init);
     }
@@ -91,24 +92,26 @@ impl Plugin for IosSafeAreaPlugin {
 #[cfg(target_os = "ios")]
 fn init(
     _non_send_marker: bevy_ecs::system::NonSendMarker,
+    mut window_created: MessageReader<bevy_window::WindowCreated>,
     window: Single<Entity, With<bevy_window::PrimaryWindow>>,
     mut commands: Commands,
-    mut done: Local<bool>,
 ) {
     use bevy_log::tracing;
     use winit::raw_window_handle::HasWindowHandle;
 
-    if *done {
+    if !window_created
+        .read()
+        .any(|created| created.window == *window)
+    {
         return;
     }
 
     tracing::debug!("safe area updating");
 
     let insets = bevy_winit::WINIT_WINDOWS.with_borrow(|windows| {
-        // The OS window may not be registered yet during early frames; retry next
-        // frame instead of panicking.
+        // Guaranteed registered at this point (`WindowCreated` is written after
+        // registration), but stay panic-free regardless.
         let Some(raw_window) = windows.get_window(*window) else {
-            tracing::debug!("safe area: window handle not ready yet, retrying next frame");
             return None;
         };
 
@@ -142,6 +145,5 @@ fn init(
     if let Some(safe_area) = insets {
         tracing::debug!("safe area updated: {:?}", safe_area);
         commands.insert_resource(safe_area);
-        *done = true;
     }
 }
