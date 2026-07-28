@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.5.2] - 2026-07-28
+
+### Fixed
+* fix iOS startup crash: read the safe area insets on `WindowCreated` instead of `Startup`, where the winit window may not be registered yet [#14](https://github.com/rustunit/bevy_ios_safearea/pull/14)
+
 ## [0.5.1] - 2026-01-16
 
 ### Changed
