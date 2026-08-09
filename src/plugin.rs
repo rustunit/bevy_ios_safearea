@@ -91,6 +91,9 @@ impl Plugin for IosSafeAreaPlugin {
 
 #[cfg(target_os = "ios")]
 fn init(
+    // Also doubles as the main-thread guarantee `native::safe_area_insets` relies
+    // on: Bevy only ever schedules `NonSend` systems on the main thread, and
+    // UIKit's `-safeAreaInsets` is main-thread-only.
     _non_send_marker: bevy_ecs::system::NonSendMarker,
     mut window_created: MessageReader<bevy_window::WindowCreated>,
     window: Single<Entity, With<bevy_window::PrimaryWindow>>,
@@ -111,9 +114,7 @@ fn init(
     let insets = bevy_winit::WINIT_WINDOWS.with_borrow(|windows| {
         // Guaranteed registered at this point (`WindowCreated` is written after
         // registration), but stay panic-free regardless.
-        let Some(raw_window) = windows.get_window(*window) else {
-            return None;
-        };
+        let raw_window = windows.get_window(*window)?;
 
         let Ok(handle) = raw_window.window_handle() else {
             return None;
@@ -122,20 +123,16 @@ fn init(
         if let winit::raw_window_handle::RawWindowHandle::UiKit(handle) = handle.as_raw() {
             let ui_view: *mut std::ffi::c_void = handle.ui_view.as_ptr();
 
-            let (top, bottom, left, right) = unsafe {
-                (
-                    crate::native::swift_safearea_top(ui_view),
-                    crate::native::swift_safearea_bottom(ui_view),
-                    crate::native::swift_safearea_left(ui_view),
-                    crate::native::swift_safearea_right(ui_view),
-                )
-            };
+            // SAFETY: `ui_view` is winit's own live `UIView*` for this window, and
+            // this closure runs inside `init`, which only ever runs on the main
+            // thread (see the `_non_send_marker` comment above).
+            let insets = unsafe { crate::native::safe_area_insets(ui_view) };
 
             Some(IosSafeAreaResource {
-                top,
-                bottom,
-                left,
-                right,
+                top: insets.top,
+                bottom: insets.bottom,
+                left: insets.left,
+                right: insets.right,
             })
         } else {
             None

@@ -17,32 +17,23 @@ Bevy plugin to query ios device safe area insets.
 * reads safe area on app start
 * easy access via a resource
 * noop on non-ios platforms (no `cfg`s needed in your app code)
+* pure Rust + objc2 on the iOS side — no Swift Package, no Xcode SPM step
 
 ## Instructions
 
-1. Add to XCode: Add SPM (Swift Package Manager) dependency
-2. Add Rust dependency
-3. Setup Plugin
+### 1. Add the dependency
 
-### 1. Add to XCode
-
-* Go to `File` -> `Add Package Dependencies` and paste `https://github.com/rustunit/bevy_ios_safearea.git` into the search bar on the top right:
-  ![xcode](./assets/xcode-spm.png)
-
-### 2. Add Rust dependency
-
-```sh
-cargo add bevy_ios_safearea
-```
-
-or
+Plain `[dependencies]`, not target-gated — that's what "no `cfg`s needed in
+your app code" above means. The only iOS-specific bit
+([`objc2-ui-kit`](https://docs.rs/objc2-ui-kit)) is gated inside *this*
+crate's own `Cargo.toml`, not the consumer's.
 
 ```toml
-# always pin to the same exact version you also of the Swift package
-bevy_ios_safearea = { version = "=0.6.0" }
+[dependencies]
+bevy_ios_safearea = "0.7"
 ```
 
-### 3. Setup Plugin in Bevy
+### 2. Setup Plugin in Bevy
 
 Initialize Bevy Plugin:
 
@@ -81,7 +72,7 @@ fn bevy_system(safe_area: IosSafeArea) {
 
 |bevy|crate|
 |----|---|
-|0.19|0.6,main|
+|0.19|0.6,0.7,main|
 |0.18|0.5|
 |0.17|0.4|
 |0.16|0.3|

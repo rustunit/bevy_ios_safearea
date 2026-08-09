@@ -1,13 +1,16 @@
 [package]
 name = "bevy_ios_safearea"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2024"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
 documentation = "https://docs.rs/bevy_ios_safearea"
 repository = "https://github.com/rustunit/bevy_ios_safearea"
-keywords = ["bevy", "gamedev", "mobile", "ios", "swift"]
+keywords = ["bevy", "gamedev", "mobile", "ios"]
 description = "Bevy plugin to query device safe area insets"
+# now that the crate sits at the repo root, keep repo-only files out of the package
+# (`assets/` stays: the README image resolves from there)
+exclude = [".github/", "justfile"]
 
 [package.metadata.docs.rs]
 targets = [
@@ -26,6 +29,14 @@ bevy_window = { version = "0.19", default-features = false }
 bevy_log = { version = "0.19", default-features = false }
 bevy_winit = { version = "0.19", default-features = false }
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
+
+# Pinned to the exact version winit's own iOS backend already resolves to, with a
+# subset of the features it already enables, so this adds nothing to the graph.
+[target.'cfg(target_os = "ios")'.dependencies]
+objc2-ui-kit = { version = "0.2.2", default-features = false, features = [
+    "UIView",
+    "UIGeometry",
+] }
 
 [dev-dependencies]
 bevy = { version = "0.19", default-features = false }
