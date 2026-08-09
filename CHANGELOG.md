@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.7.0] - 2026-08-09
+
+### Changed
+* **BREAKING (packaging only, not API):** read `-[UIView safeAreaInsets]` directly via `objc2`/`objc2-ui-kit` instead of an `extern "C"` shim into a companion Swift Package. Consumers no longer add this crate as an Xcode SPM dependency — the Rust dependency is now the whole story. Public API (`IosSafeAreaPlugin`, `IosSafeAreaResource`, `IosSafeArea`) is unchanged.
+
+### Removed
+* the companion Swift Package (`Package.swift`, `Sources/`) — no longer needed
+
 ## [0.6.0] - 2026-07-28
 
 ### Changed
