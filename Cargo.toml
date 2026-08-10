@@ -6,7 +6,7 @@ license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
 documentation = "https://docs.rs/bevy_ios_safearea"
 repository = "https://github.com/rustunit/bevy_ios_safearea"
-keywords = ["bevy", "gamedev", "mobile", "ios"]
+keywords = ["bevy", "gamedev", "mobile", "ios", "tvos"]
 description = "Bevy plugin to query device safe area insets"
 # now that the crate sits at the repo root, keep repo-only files out of the package
 # (`assets/` stays: the README image resolves from there)
@@ -33,7 +33,7 @@ winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 # Every feature `UIView`/`safeAreaInsets` is gated on has to be listed: this is our
 # own copy of the crate now (winit is still on 0.2), so nothing arrives via feature
 # unification. `objc2-core-foundation` carries `UIEdgeInsets`' `CGFloat` since 0.3.
-[target.'cfg(target_os = "ios")'.dependencies]
+[target.'cfg(any(target_os = "ios", target_os = "tvos"))'.dependencies]
 objc2-ui-kit = { version = "0.3", default-features = false, features = [
     "UIResponder",
     "UIView",

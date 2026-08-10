@@ -76,7 +76,10 @@ impl IosSafeArea<'_> {
 pub struct IosSafeAreaPlugin;
 
 impl Plugin for IosSafeAreaPlugin {
-    #[cfg_attr(not(target_os = "ios"), allow(unused_variables))]
+    #[cfg_attr(
+        not(any(target_os = "ios", target_os = "tvos")),
+        allow(unused_variables)
+    )]
     fn build(&self, app: &mut App) {
         // `init` reacts to `WindowCreated` instead of running once at `Startup`: the
         // winit `UIWindow` is not guaranteed to be registered in `WINIT_WINDOWS` during
@@ -84,12 +87,12 @@ impl Plugin for IosSafeAreaPlugin {
         // a frame or two after Bevy's first update. `bevy_winit` writes `WindowCreated`
         // immediately after registering the window, so that message is the earliest
         // point where the handle is guaranteed to be available.
-        #[cfg(target_os = "ios")]
+        #[cfg(any(target_os = "ios", target_os = "tvos"))]
         app.add_systems(Update, init);
     }
 }
 
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "tvos"))]
 fn init(
     // Also doubles as the main-thread guarantee `native::safe_area_insets` relies
     // on: Bevy only ever schedules `NonSend` systems on the main thread, and

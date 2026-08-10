@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-#[cfg(target_os = "ios")]
+#[cfg(any(target_os = "ios", target_os = "tvos"))]
 mod native;
 mod plugin;
 
