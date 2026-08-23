@@ -1,6 +1,6 @@
 [package]
 name = "bevy_ios_safearea"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2024"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
@@ -30,12 +30,15 @@ bevy_log = { version = "0.19", default-features = false }
 bevy_winit = { version = "0.19", default-features = false }
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 
-# Pinned to the exact version winit's own iOS backend already resolves to, with a
-# subset of the features it already enables, so this adds nothing to the graph.
+# Every feature `UIView`/`safeAreaInsets` is gated on has to be listed: this is our
+# own copy of the crate now (winit is still on 0.2), so nothing arrives via feature
+# unification. `objc2-core-foundation` carries `UIEdgeInsets`' `CGFloat` since 0.3.
 [target.'cfg(target_os = "ios")'.dependencies]
-objc2-ui-kit = { version = "0.2.2", default-features = false, features = [
+objc2-ui-kit = { version = "0.3", default-features = false, features = [
+    "UIResponder",
     "UIView",
     "UIGeometry",
+    "objc2-core-foundation",
 ] }
 
 [dev-dependencies]

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.7.1] - 2026-08-23
+
+### Changed
+* upgrade `objc2-ui-kit` to `0.3` — no source or API change; `safeAreaInsets` is now additionally gated on the `objc2-core-foundation` feature, which supplies `UIEdgeInsets`' `CGFloat`
+
 ## [0.7.0] - 2026-08-09
 
 ### Changed
