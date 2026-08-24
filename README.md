@@ -8,7 +8,7 @@
 [sh_discord]: https://img.shields.io/discord/1176858176897953872?label=discord&color=5561E6
 [lk_discord]: https://discord.gg/rQNeEnMhus
 
-Bevy plugin to query ios device safe area insets.
+Bevy plugin to query iOS and tvOS device safe area insets.
 
 ![demo](./assets/example.jpg)
 
@@ -16,17 +16,28 @@ Bevy plugin to query ios device safe area insets.
 
 * reads safe area on app start
 * easy access via a resource
-* noop on non-ios platforms (no `cfg`s needed in your app code)
-* pure Rust + objc2 on the iOS side — no Swift Package, no Xcode SPM step
+* noop on platforms without safe areas (no `cfg`s needed in your app code)
+* pure Rust + objc2 on the iOS/tvOS side — no Swift Package, no Xcode SPM step
+
+On tvOS the same `UIView.safeAreaInsets` (11.0+) reports the **overscan** margin —
+the border a television may decline to display — so treating these insets as a floor
+for your own padding is what keeps a HUD out of the croppable edge of the screen.
 
 ## Instructions
 
 ### 1. Add the dependency
 
 Plain `[dependencies]`, not target-gated — that's what "no `cfg`s needed in
-your app code" above means. The only iOS-specific bit
+your app code" above means. The only UIKit-specific bit
 ([`objc2-ui-kit`](https://docs.rs/objc2-ui-kit)) is gated inside *this*
 crate's own `Cargo.toml`, not the consumer's.
+
+**On tvOS there is a caveat that is not ours:** `winit` 0.30 has no tvOS support at
+all — it misses the `apple` cfg alias, *is* `unix`, and so compiles its X11/Wayland
+backend for an Apple TV. Since this crate depends on `winit` (to reach the
+`UIWindow` behind Bevy's window), a tvOS build only resolves in a workspace that
+patches `winit` itself. That is also why CI has no tvOS leg here: there is nothing
+to gate on until upstream `winit` builds for the platform.
 
 ```toml
 [dependencies]

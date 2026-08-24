@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+* tvOS support: `UIView.safeAreaInsets` is tvOS 11.0+ and reports the *overscan* margin
+  there, so the plugin works unchanged - only the `target_os = "ios"` gates had to widen.
+  Not covered by CI, and not buildable standalone: `winit` 0.30 has no tvOS support, so an
+  `aarch64-apple-tvos` build only resolves in a workspace that patches `winit` itself
+
 ## [0.7.1] - 2026-08-23
 
 ### Changed
