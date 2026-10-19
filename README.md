@@ -41,7 +41,7 @@ to gate on until upstream `winit` builds for the platform.
 
 ```toml
 [dependencies]
-bevy_ios_safearea = "0.7"
+bevy_ios_safearea = "0.8"
 ```
 
 ### 2. Setup Plugin in Bevy
@@ -83,7 +83,8 @@ fn bevy_system(safe_area: IosSafeArea) {
 
 |bevy|crate|
 |----|---|
-|0.19|0.6,0.7,main|
+|0.20|0.8,main|
+|0.19|0.6,0.7|
 |0.18|0.5|
 |0.17|0.4|
 |0.16|0.3|

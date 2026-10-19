@@ -1,6 +1,6 @@
 [package]
 name = "bevy_ios_safearea"
-version = "0.7.1"
+version = "0.8.0"
 edition = "2024"
 license = "MIT"
 authors = ["extrawurst <mail@rusticorn.com>"]
@@ -22,12 +22,12 @@ targets = [
 ]
 
 [dependencies]
-bevy_ecs = { version = "0.19", default-features = false, features = ["std"] }
-bevy_math = { version = "0.19", default-features = false, features = ["std"] }
-bevy_app = { version = "0.19", default-features = false, features = ["std"] }
-bevy_window = { version = "0.19", default-features = false }
-bevy_log = { version = "0.19", default-features = false }
-bevy_winit = { version = "0.19", default-features = false }
+bevy_ecs = { version = "0.20", default-features = false, features = ["std"] }
+bevy_math = { version = "0.20", default-features = false, features = ["std"] }
+bevy_app = { version = "0.20", default-features = false, features = ["std"] }
+bevy_window = { version = "0.20", default-features = false }
+bevy_log = { version = "0.20", default-features = false }
+bevy_winit = { version = "0.20", default-features = false }
 winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 
 # Every feature `UIView`/`safeAreaInsets` is gated on has to be listed: this is our
@@ -42,7 +42,7 @@ objc2-ui-kit = { version = "0.3", default-features = false, features = [
 ] }
 
 [dev-dependencies]
-bevy = { version = "0.19", default-features = false }
+bevy = { version = "0.20", default-features = false }
 
 [lints.rust]
 missing_docs = "warn"
