@@ -23,12 +23,7 @@ targets = [
 
 [dependencies]
 bevy_ecs = { version = "0.20", default-features = false, features = ["std"] }
-bevy_math = { version = "0.20", default-features = false, features = ["std"] }
 bevy_app = { version = "0.20", default-features = false, features = ["std"] }
-bevy_window = { version = "0.20", default-features = false }
-bevy_log = { version = "0.20", default-features = false }
-bevy_winit = { version = "0.20", default-features = false }
-winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 
 # Every feature `UIView`/`safeAreaInsets` is gated on has to be listed: this is our
 # own copy of the crate now (winit is still on 0.2), so nothing arrives via feature
@@ -40,6 +35,11 @@ objc2-ui-kit = { version = "0.3", default-features = false, features = [
     "UIGeometry",
     "objc2-core-foundation",
 ] }
+# only the iOS/tvOS `init` system uses these
+bevy_window = { version = "0.20", default-features = false }
+bevy_log = { version = "0.20", default-features = false }
+bevy_winit = { version = "0.20", default-features = false }
+winit = { version = "0.30", default-features = false, features = ["rwh_06"] }
 
 [dev-dependencies]
 bevy = { version = "0.20", default-features = false }
